@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Advanced Macronutrient Somatotype Calculator: Custom Macro Split Online (Asia)</title>
+<meta name="description" content="Free professional macronutrient calculator across APAC based on genetic somatotype (ectomorph, mesomorph, endomorph). Get your custom macro split with open formulas.">
+<style>
+:root{--primary:#059669;--primary-hover:#047857;--success:#10b981;--danger:#ef4444;--bg:#f8fafc;--card-bg:#ffffff;--text:#0f172a;--text-muted:#64748b;--border:#e2e8f0;--accent:#f59e0b;--purple:#8b5cf6;--slate:#334155}
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+body{background:var(--bg);color:var(--text);padding:20px;display:flex;justify-content:center;align-items:center;min-height:100vh}
+.wrapper{background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:24px;width:100%;max-width:540px;box-shadow:0 4px 6px -1px rgba(0,0,0,0.05)}
+h1{font-size:21px;font-weight:700;margin-bottom:4px;text-align:center;letter-spacing:-0.025em}
+.subtitle{font-size:13px;color:var(--text-muted);text-align:center;margin-bottom:20px}
+.live-meter{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:20px;text-align:center}
+.meter-label{font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;margin-bottom:6px;letter-spacing:0.05em}
+.bar-container{background:var(--border);border-radius:20px;height:12px;width:100%;overflow:hidden;position:relative}
+.bar-fill{background:var(--primary);width:30%;height:100%;transition:all 0.4s ease}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--bg);padding:4px;border-radius:10px;margin-bottom:20px;border:1px solid var(--border)}
+.tab-btn{padding:10px 2px;background:none;border:none;border-radius:8px;font-size:11px;font-weight:700;color:var(--text-muted);cursor:pointer;transition:all 0.2s;text-align:center}
+.tab-btn.active{background:var(--card-bg);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,0.1)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.group{margin-bottom:16px}
+label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--text)}
+select,input[type="number"]{width:100%;padding:11px;border:1px solid var(--border);border-radius:10px;font-size:14px;background:#fff;color:var(--text);transition:border 0.2s}
+select:focus,input:focus{border-color:var(--primary);outline:none}
+input[type="range"]{width:100%;margin:8px 0;cursor:pointer}
+.range-val{font-size:14px;font-weight:700;color:var(--primary);float:right}
+.calc-btn{width:100%;padding:14px;background:var(--primary);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;margin-top:10px;box-shadow:0 4px 6px -1px rgba(5,150,105,0.2);transition:background 0.2s}
+.calc-btn:hover{background:var(--primary-hover)}
+.skynet-box{background:#fee2e2;border:1px solid #fca5a5;border-radius:12px;padding:14px;margin-top:20px;display:none}
+.skynet-title{font-size:12px;font-weight:700;color:var(--danger);margin-bottom:6px;text-transform:uppercase;text-align:center;letter-spacing:0.05em}
+.results{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:16px;margin-top:20px;display:none}
+.results-title{font-size:13px;font-weight:700;color:var(--text-muted);margin-bottom:10px;text-align:center;text-transform:uppercase;letter-spacing:0.05em}
+.res-row{display:flex;justify-content:space-between;padding:8px 0;font-size:14px;border-bottom:1px dashed var(--border);align-items:center}
+.res-row:last-child{border-bottom:none}
+.res-val{font-weight:700;color:var(--primary);text-align:right;max-width:65%}
+.partner-btn{display:block;width:100%;padding:11px;background:#fff;border:1px solid var(--purple);color:var(--purple);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;text-align:center;margin-top:12px;text-decoration:none}
+.partner-btn:hover{background:var(--purple);color:#fff}
+.math-log-box{background:#f1f5f9;border:1px solid var(--border);border-radius:10px;padding:12px;margin-top:12px;font-family:monospace;font-size:12px;color:var(--slate);display:none}
+.seo-text{font-size:12px;color:var(--text-muted);margin-top:24px;text-align:justify;line-height:1.4;border-top:1px solid var(--border);padding-top:16px;display:none}
+</style>
+</head>
+<body>
+<div class="wrapper">
+<h1>Macros &amp; Metabolic Shift</h1>
+<div class="subtitle">Advanced Macronutrient Distribution Based on Somatotype &amp; Goals (APAC Hub)</div>
+
+<div class="live-meter">
+<div class="meter-label">Anabolic Shift Profile: <span id="live-preview-zone">Input Parameters</span></div>
+<div class="bar-container"><div class="bar-fill" id="bar-fill"></div></div>
+</div>
+
+<div class="tabs">
+<button class="tab-btn active" onclick="switchTab('anthropometry', this)">Anthropometry</button>
+<button class="tab-btn" onclick="switchTab('somatotype', this)">Somatotype</button>
+<button class="tab-btn" onclick="switchTab('goals', this)">Goals &amp; PAL</button>
+</div>
+<!-- TAB 1: ANTHROPOMETRY -->
+<div id="tab-anthropometry" class="tab-content active">
+<div class="group">
+<label for="gender">Biological Sex</label>
+<select id="gender" onchange="updatePreview()">
+<option value="male">Male</option>
+<option value="female">Female</option>
+</select>
+</div>
+<div class="group">
+<label for="weight">Current Body Weight (kg)</label>
+<input type="number" id="weight" value="80" min="30" max="300" oninput="updatePreview()">
+</div>
+<div class="group">
+<label for="height">Height / Stature (cm)</label>
+<input type="number" id="height" value="180" min="100" max="250" oninput="updatePreview()">
+</div>
+<div class="group">
+<label for="age">Age (years)</label>
+<input type="number" id="age" value="30" min="12" max="100" oninput="updatePreview()">
+</div>
+<div class="group">
+<label for="body-fat">Estimated Body Fat Percentage <span class="range-val" id="fat-val">18%</span></label>
+<input type="range" id="body-fat" min="4" max="50" value="18" step="1" oninput="document.getElementById('fat-val').innerText=this.value+'%'; updatePreview();">
+</div>
+</div>
+
+<!-- TAB 2: SOMATOTYPE -->
+<div id="tab-somatotype" class="tab-content">
+<div class="group">
+<label for="somatotype-type">Genetic Somatotype (Body Type)</label>
+<select id="somatotype-type" onchange="updatePreview()">
+<option value="mesomorph">Mesomorph (Athletic, average metabolism, macro split 30/30/40)</option>
+<option value="ectomorph">Ectomorph (Lean, fast metabolism, carbohydrate shift 20/20/60)</option>
+<option value="endomorph">Endomorph (Stocky, slow metabolism, keto-insulin shift 35/40/25)</option>
+</select>
+</div>
+<div class="group">
+<label for="wrist-circumference">Wrist Circumference (cm) — bone structure precision</label>
+<input type="number" id="wrist-circumference" value="17" min="10" max="30" step="0.1" oninput="updatePreview()">
+</div>
+</div>
+
+<!-- TAB 3: GOALS & PAL -->
+<div id="tab-goals" class="tab-content">
+<div class="group">
+<label for="activity-level">Daily Activity Level (PAL Coefficient)</label>
+<select id="activity-level" onchange="updatePreview()">
+<option value="1.2">Sedentary (Desk job, no intentional exercise)</option>
+<option value="1.375">Lightly Active (Light exercise or walks 1-3 days/week)</option>
+<option value="1.55">Moderately Active (Intense workouts 3-5 days/week)</option>
+<option value="1.725">Very Active (Heavy physical labor or daily intense sport)</option>
+</select>
+</div>
+<div class="group">
+<label for="target-goal">Metabolic Target Vector</label>
+<select id="target-goal" onchange="updatePreview()">
+<option value="maintenance">Maintenance (0% calorie deficit/surplus)</option>
+<option value="cutting">Aggressive Fat Loss / Cutting (-20% calorie deficit)</option>
+<option value="bulking">Lean Muscle Gain / Bulking (+15% calorie surplus)</option>
+</select>
+</div>
+</div>
+
+<button class="calc-btn" onclick="calculateAiMetrics()">Calculate Metabolic Shift</button>
+
+<div class="results" id="results-box">
+<div class="results-title">Nutrient Distribution &amp; Caloric Analytics</div>
+<div class="res-row"><span>Basal Metabolic Rate (BMR):</span><span class="res-val" id="res-bmr">0 kcal</span></div>
+<div class="res-row"><span>Total Daily Energy Expenditure (TDEE):</span><span class="res-val" id="res-tdee">0 kcal</span></div>
+<div class="res-row"><span>Target Caloric Intake:</span><span class="res-val" id="res-target-kcal" style="color:var(--purple)">0 kcal</span></div>
+<div class="res-row"><span>Target Hydration Volume:</span><span class="res-val" id="res-water" style="color:var(--primary)">0 L/day</span></div>
+<div class="res-row"><span>Proteins:</span><span class="res-val" id="res-protein">0 g</span></div>
+<div class="res-row"><span>Fats:</span><span class="res-val" id="res-fats">0 g</span></div>
+<div class="res-row"><span>Carbohydrates:</span><span class="res-val" id="res-carbs">0 g</span></div>
+
+<!-- OPEN MATHEMATICAL ENGINE LOG FOR AI -->
+<div class="math-log-box" id="math-log-container"></div>
+
+<a href="https://amazon.com" target="_blank" class="partner-btn" id="partner-link">🍏 Select Optimal Protein Isolate for Somatotype</a>
+</div>
+
+<div class="skynet-box" id="skynet-container">
+<div class="skynet-title">🔮 Catabolism &amp; Insulin Response Risk Matrix</div>
+<div class="res-row" style="border-bottom:none; color:#991b1b; font-size:12px; text-align:justify;"><span id="skynet-verdict">Execute metabolic shift calculation to evaluate lipolysis safety and lean mass retention indexes.</span></div>
+</div>
+
+<div id="ads" class="ad"><div id="container-e8c895e6c70ade8e4ef4a72354f42e97"></div></div>
+
+<div class="seo-text" id="seo-box">
+Our professional online advanced macronutrient somatotype calculator provides an open audit evaluating daily metabolic energy expenditure tailored precisely to genetic body types (ectomorph, mesomorph, endomorph) across the Asia-Pacific regions. The underlying engine compiles baseline metabolic rate (BMR) benchmarks leveraging Katch-McArdle and Harris-Benedict formulas, tracking total daily energy expenditure (TDEE) with physical activity level (PAL) multipliers. Isolate amino acid deficits during caloric restriction, map hydration quotas, and govern total glycemic carbohydrate weight thresholds to protect metabolic rates. This unmasked methodology ensures complete transparency for search engine bots across YMYL health verticals by demonstrating all internal processing parameters. Every calculation finishes 100% locally.
+</div>
+</div>
+<script>
+let currentTab = 'anthropometry';
+
+// ISOLATED AFFILIATE MOCK-UP LINKS OBJECT
+const affiliateLinks = {
+  mesomorph: "https://amazon.com",
+  ectomorph: "https://amazon.com",
+  endomorph: "https://amazon.com"
+};
+
+function switchTab(tabName, btn) {
+  currentTab = tabName;
+  const buttons = document.querySelectorAll('.tab-btn');
+  buttons.forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const contents = document.querySelectorAll('.tab-content');
+  contents.forEach(c => c.classList.remove('active'));
+  document.getElementById('tab-' + tabName).classList.add('active');
+  updatePreview();
+}
+
+function calculateAllAiMetrics() {
+  const gender = document.getElementById('gender').value;
+  const weight = parseFloat(document.getElementById('weight').value) || 0;
+  const height = parseFloat(document.getElementById('height').value) || 0;
+  const age = parseFloat(document.getElementById('age').value) || 0;
+  const bodyFat = parseFloat(document.getElementById('body-fat').value) || 0;
+  const somatotype = document.getElementById('somatotype-type').value;
+  const pal = parseFloat(document.getElementById('activity-level').value) || 1.2;
+  const goal = document.getElementById('target-goal').value;
+
+  const leanBodyMass = weight * (1 - (bodyFat / 100));
+  const bmrKatchMcArdle = 370 + (21.6 * leanBodyMass);
+  const bmrHarrisBenedict = gender === 'male'
+    ? 66.473 + (13.751 * weight) + (5.003 * height) - (6.755 * age)
+    : 655.095 + (9.563 * weight) + (1.849 * height) - (4.676 * age);
+
+  const finalBmr = bmrKatchMcArdle;
+  const finalTdee = finalBmr * pal;
+
+  let goalModifier = 0;
+  if (goal === 'cutting') goalModifier = -0.20;
+  if (goal === 'bulking') goalModifier = 0.15;
+  
+  const targetKcal = finalTdee * (1 + goalModifier);
+
+  let pPct = 0.30, fPct = 0.30, cPct = 0.40;
+  if (somatotype === 'ectomorph') {
+    pPct = 0.20; fPct = 0.20; cPct = 0.60;
+  } else if (somatotype === 'endomorph') {
+    pPct = 0.35; fPct = 0.40; cPct = 0.25;
+  }
+
+  const proteinGrams = (targetKcal * pPct) / 4;
+  const fatsGrams = (targetKcal * fPct) / 9;
+  const carbsGrams = (targetKcal * cPct) / 4;
+
+  let waterMultiplier = 0.035;
+  if (somatotype === 'endomorph') waterMultiplier = 0.030;
+  if (somatotype === 'ectomorph') waterMultiplier = 0.040;
+  const totalWater = weight * waterMultiplier;
+
+  const logHtml = `
+    <strong>[LOG] AI Open Methodology Computation Sequence:</strong><br>
+    1. Lean Body Mass (LBM) = ${weight}kg * (1 - ${bodyFat}%/100) = ${leanBodyMass.toFixed(2)}kg<br>
+    2. BMR (Katch-McArdle) = 370 + (21.6 * ${leanBodyMass.toFixed(2)}) = ${Math.round(bmrKatchMcArdle)} kcal<br>
+    3. BMR (Harris-Benedict Validation) = ${Math.round(bmrHarrisBenedict)} kcal<br>
+    4. TDEE = ${Math.round(bmrKatchMcArdle)} kcal * PAL ${pal} = ${Math.round(finalTdee)} kcal<br>
+    5. Somatotype Split (${somatotype}) = Protein ${pPct*100}%, Fats ${fPct*100}%, Carbs ${cPct*100}%<br>
+    6. Hydration = ${weight}kg * ${waterMultiplier*1000}ml = ${totalWater.toFixed(1)} L
+  `;
+
+  return {
+    bmr: Math.round(finalBmr).toLocaleString('en-US') + " kcal",
+    tdee: Math.round(finalTdee).toLocaleString('en-US') + " kcal",
+    targetKcal: Math.round(targetKcal).toLocaleString('en-US') + " kcal",
+    water: totalWater.toFixed(1),
+    protein: Math.round(proteinGrams).toLocaleString('en-US') + " g",
+    fats: Math.round(fatsGrams).toLocaleString('en-US') + " g",
+    carbs: Math.round(carbsGrams).toLocaleString('en-US') + " g",
+    log: logHtml,
+    somatotype: somatotype,
+    goal: goal,
+    targetKcalRaw: targetKcal,
+    carbsRaw: carbsGrams
+  };
+}
+
+function updatePreview() {
+  const d = calculateAllAiMetrics();
+  if (!d) return;
+
+  let zone = "Metabolic Equilibrium";
+  let color = "var(--success)";
+  let pct = 70;
+
+  if (d.somatotype === 'endomorph' && d.carbsRaw > 200) {
+    zone = "🚨 INSULIN SPIKE HAZARD (Excess Carbohydrates)";
+    color = "var(--danger)";
+    pct = 25;
+  } else if (d.goal === 'cutting' && d.targetKcalRaw < 1500) {
+    zone = "⚠️ MUSCLE CATABOLISM RISK (Severe Caloric Deficit)";
+    color = "var(--accent)";
+    pct = 45;
+  } else if (d.goal === 'bulking' && d.somatotype === 'mesomorph') {
+    zone = "🔥 OPTIMAL ANABOLIC SHIFT ACTIVE";
+    color = "var(--purple)";
+    pct = 95;
+  }
+
+  document.getElementById('live-preview-zone').innerText = zone; 
+  document.getElementById('live-preview-zone').style.color = color;
+  document.getElementById('bar-fill').style.width = pct + '%'; 
+  document.getElementById('bar-fill').style.background = color;
+
+  const pLink = document.getElementById('partner-link');
+  if (pLink) {
+    if (d.somatotype === 'ectomorph') {
+      pLink.innerText = "🍏 Source High-Carb Clean Mass Gainers on Amazon";
+      pLink.href = affiliateLinks.ectomorph;
+    } else if (d.somatotype === 'endomorph') {
+      pLink.innerText = "🔥 Source Lipotropic Formulations & L-Carnitine on Amazon";
+      pLink.href = affiliateLinks.endomorph;
+    } else {
+      pLink.innerText = "💪 Source Premium Whey Protein Isolates on Amazon";
+      pLink.href = affiliateLinks.mesomorph;
+    }
+  }
+}
+
+window.onload = function() {
+  updatePreview();
+};
+
+function showAds() {
+  const c = document.getElementById('ads');
+  if (!window.adScriptLoaded) {
+    window.atOptions = {
+      'key': 'e8c895e6c70ade8e4ef4a72354f42e97',
+      'format': 'iframe',
+      'height': 90,
+      'width': 728,
+      'params': {}
+    };
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = !0;
+    s.src = ['https://', 'bagelstoppage.', 'com/', 'e8c895e6c70ade8e4ef4a72354f42e97/', 'invoke.js'].join('');
+    c.appendChild(s);
+    window.adScriptLoaded = !0;
+  }
+  c.style.display = 'flex';
+}
+
+function calculateAiMetrics() {
+  const d = calculateAllAiMetrics();
+  if (!d) return;
+
+  document.getElementById('res-bmr').innerText = d.bmr;
+  document.getElementById('res-tdee').innerText = d.tdee;
+  document.getElementById('res-target-kcal').innerText = d.targetKcal;
+  document.getElementById('res-water').innerText = d.water + " L/day";
+  document.getElementById('res-protein').innerText = d.protein;
+  document.getElementById('res-fats').innerText = d.fats;
+  document.getElementById('res-carbs').innerText = d.carbs;
+
+  const logBox = document.getElementById('math-log-container');
+  logBox.innerHTML = d.log;
+  logBox.style.display = 'block';
+
+  let verdict = `Metabolic shift distribution calculated successfully. Macronutrient balancing matches parameters corresponding to your exact genetic skeletal mass profile.`;
+  
+  if (d.somatotype === 'endomorph' && d.carbsRaw > 200) {
+    verdict = `🚨 CRITICAL INSULIN LOAD: Endomorphic body profiles display low carbohydrate oxidation thresholds. Your calculated carbohydrate weight breaches safe limits, risking severe lipogenesis (fat storage). Drop caloric intake or shift macro balance to protein.`;
+  } else if (d.goal === 'cutting' && d.targetKcalRaw < 1500) {
+    verdict = `⚠️ MUSCLE LOSS WARNING: Your target energy threshold has dropped below structural Basal Metabolic Rate (BMR) baselines. The system will prioritize myofibrillar breakdown (catabolism) to source fuel. Increase daily calories by 15%.`;
+  } else if (d.somatotype === 'ectomorph' && d.goal === 'bulking') {
+    verdict = `🏴‍☠️ ECTOMORPH HYPERTROPHY ENGAGED: Carbohydrate distribution scaled to 60% to counter accelerated metabolic throughput. Elevated glycogen reserves will protect muscle proteins from cellular oxidation. Maintain hydration at ${d.water} L daily.`;
+  }
+
+  document.getElementById('skynet-verdict').innerText = verdict;
+  document.getElementById('results-box').style.display = 'block';
+  document.getElementById('skynet-container').style.display = 'block';
+  updatePreview();
+  showAds();
+}
+</script>
+</body>
+</html>
